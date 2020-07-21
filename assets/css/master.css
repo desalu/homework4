@@ -1,0 +1,12 @@
+body {
+  background-color: #FBFCFD;
+}
+ #time-box {
+   position: absolute;
+   top: 0;
+   right: 20px;
+ }
+
+ .jumbotron {
+   width: 100%;
+ }
