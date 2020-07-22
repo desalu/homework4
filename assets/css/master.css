@@ -1,5 +1,7 @@
 body {
-  background-color: #FBFCFD;
+  background-image: url(../img/bg-codes.jpg);
+  background-position: center;
+  background-size: cover;
 }
  #time-box {
    position: absolute;
@@ -7,6 +9,6 @@ body {
    right: 20px;
  }
 
- .jumbotron {
-   width: 100%;
+ #answers-box {
+   min-height: 40px;
  }

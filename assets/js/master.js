@@ -1,67 +1,73 @@
 var questionEl = document.querySelector("#question-box");
 var answersEl = document.querySelector("#answers-box");
+var input = document.createElement("input");
 var i = 0;
 var j = 0;
 var scoreKeeping = [];
 var timerEl = document.querySelector("#time-box");
-var timer2 = document.querySelector("#time2"); 
+
+var records = [{ name : "Fred", score: 6}];
+
 var counter = 5;
+var counter2 = 30;
+var clock = 0;
+var clock2 = 0;
+
+
 
 function startMenu() {
   questionEl.textContent = "Javascript Quiz";
+  questionEl.classList.add("display-4");
+  questionEl.classList.add("text-center")
   var startButton = document.createElement("button");
   startButton.textContent = "Start";
   startButton.classList.add("btn");
-  startButton.classList.add("btn-primary");
+  startButton.classList.add("btn-warning");
   startButton.classList.add("float-right")
   answersEl.appendChild(startButton);
 
   startButton.addEventListener("click", function () {  
     questionEl.textContent = "";
     startButton.parentNode.removeChild(startButton);
-    countdown();
+    questionEl.classList.remove("display-4", "text-center");
+    timer();
   })
 
 };
 
-function countdown() {
 
-  var countDown = setInterval(() => {
+function timer() {
+  timerEl.textContent = counter + " sec";
+  answersEl.textContent = "Get Ready!";
+  answersEl.classList.add("display-4");
+  answersEl.classList.add("text-center");
+  if (counter > 0){
+    clock = setTimeout(timer, 1000);
+  }
+  else {
+    answersEl.textContent = "";
+    questionEl.textContent = "";
+    answersEl.classList.remove("display-4","text-center");
     
-    timerEl.textContent = counter + " seconds remaining";
+    timeLimit();
+    quizProgram();
     
-    if (counter === 0) {
-      timerEl.textContent = "";
-      console.log(this);
-      clearInterval(countDown);
-      timeLimit();
-      quizProgram();
-    }
-    else {
-      counter--;
-    }
-    
-  }, 1000);
-  
-};
+  }
+  counter--;
+}
 
 function timeLimit() {
-  counter = 30;
-
-  var quizTime = setInterval(function() {
-    timerEl.textContent = "Time: " + counter + " seconds";
-    
-
-    if (counter === 0) {
-      timerEl.textContent = "";
-      clearInterval(quizTime);
-      endGame();
-    }
-    else {
-      counter--;
-    }
-
-  }, 1000);
+  
+  timerEl.textContent = counter2 + " sec";
+  
+  if (counter2 > 0){
+    clock2 = setTimeout(timeLimit, 1000);
+  }
+  else {
+    timerEl.textContent = "";
+    endGame();
+  }
+  counter2--;
 }
 
 
@@ -70,6 +76,7 @@ function quizProgram() {
 
   for (j; j < quiz[i].answers.length; j++) {
     var answerButton = document.createElement("button");
+    answerButton.classList.add ("btn", "btn-warning", "w-100", "m-1")
     answerButton.textContent = quiz[i].answers[j];
     answerButton.id = "button";
     answerButton.setAttribute("data-index", j);
@@ -104,6 +111,7 @@ function quizProgram() {
       }
       else {
         removeElement();
+        clearTimeout(clock2);
         timerEl.textContent = "";
         counter = 0;
         endGame();
@@ -184,20 +192,86 @@ var quiz = [
       }
         
     };
-    
+
+    var br = document.createElement("br");
     questionEl.textContent = "Game over";
+    questionEl.classList.add("text-center", "display-4")
     answersEl.textContent = "You scored " + score + " out of " + quiz.length + ".";
+    answersEl.appendChild(br);
+    var form = document.createElement("form");
+    var formgroup = document.createElement("form-group");
     
-    var form = document.createElement("form-group");
-    var input = document.createElement("input")
+    input.classList.add("m-1");
     var submit = document.createElement("button");
+    submit.classList.add('m-1', "btn", "btn-primary");
     submit.textContent = "submit";
     input.setAttribute("class:", "form-control");
     input.setAttribute("id:", "intitals");
     input.setAttribute("placeholder:", "JFK");
-    form.appendChild(input);
+    form.appendChild(formgroup);
+    formgroup.appendChild(input);
     answersEl.appendChild(form);
     answersEl.appendChild(submit);
+
+    submit.addEventListener("click", function() {
+      
+      recordList(score);
+    });
+  }
+
+  function recordList(x) {
+
+    var resetBtn = document.createElement("button");
+    resetBtn.classList.add("btn", "btn-success");
+    resetBtn.textContent = "Reset";
+    questionEl.appendChild(resetBtn);
+
+    resetBtn.addEventListener("click", function() {
+      
+      startMenu()
+    })
+
+    var recordStored = JSON.parse(localStorage.getItem("records"));
+
+    if (recordStored !== null) {
+      records = recordStored;
+    };
+
+    var yourName = input.value.trim();
+    var yourScore = x;
+    records.push({name : yourName, score : yourScore});
+
+    localStorage.setItem("records", JSON.stringify(records));
+
+
+    var titleBox = document.createElement("div");
+    titleBox.classList.add("clearfix");
+    titleBox.classList.add("mb-2");
+    var nameTitle =document.createElement("div");
+    nameTitle.textContent = "Names"
+    nameTitle.classList.add("float-left");
+    var scoreTitle = document.createElement("div");
+    scoreTitle.textContent = "Scores"
+    scoreTitle.classList.add("float-right");
+    titleBox.appendChild(nameTitle);
+    titleBox.appendChild(scoreTitle);
+    answersEl.appendChild(titleBox);
+
+    for (var l = 0; l < records.length; l ++) {
+      var recordBox  = document.createElement("div");
+      recordBox.classList.add("clearfix");
+      var nameBox = document.createElement("div");
+      nameBox.classList.add("float-left");
+      var scoreBox = document.createElement("div");
+      scoreBox.classList.add("float-right");
+      nameBox.textContent = records[l].name;
+      scoreBox.textContent = records[l].score;
+      recordBox.appendChild(nameBox);
+      recordBox.appendChild(scoreBox);
+      answersEl.appendChild(recordBox);
+      
+    }
+
   }
 
   
