@@ -199,6 +199,7 @@ var quiz = [
     answersEl.textContent = "You scored " + score + " out of " + quiz.length + ".";
     answersEl.appendChild(br);
     var form = document.createElement("form");
+    form.id = "frm";
     var formgroup = document.createElement("form-group");
     
     input.classList.add("m-1");
@@ -227,9 +228,18 @@ var quiz = [
     questionEl.appendChild(resetBtn);
 
     resetBtn.addEventListener("click", function() {
+      answersEl.textContent = "";
       
-      startMenu()
-    })
+      titleBox.parentNode.removeChild(titleBox);
+      while (document.getElementById("rec")) {
+        var rem = document.getElementById("rec");
+        rem.parentNode.removeChild(rem);
+       
+      }
+      answersEl.removeChild();
+      
+      
+    });
 
     var recordStored = JSON.parse(localStorage.getItem("records"));
 
@@ -264,6 +274,9 @@ var quiz = [
       nameBox.classList.add("float-left");
       var scoreBox = document.createElement("div");
       scoreBox.classList.add("float-right");
+      recordBox.id = "rec";
+  
+
       nameBox.textContent = records[l].name;
       scoreBox.textContent = records[l].score;
       recordBox.appendChild(nameBox);
